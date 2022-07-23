@@ -1,0 +1,37 @@
+/* temp change */
+
+body {
+    background-color: #E4E7F1;
+}
+#h1 {
+    background-image: linear-gradient(45deg, #4B5267, #BBC5DD);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    -moz-background-clip: text;
+    -moz-text-fill-color: transparent;
+    font-size: 50px;
+}
+#text-fields {
+    color: #4B5267;
+    background-color: #BBC5DD;
+    float: left;
+    padding: 20px;
+}
+#text-fields input[type="text"] {
+    float: right;
+    margin-left: 20px;
+}
+#user-buttons {
+    clear: both;
+    padding-top: 20px;
+}
+#user-buttons input[type="button"] {
+    transform: scale(1.35);
+    margin-left: 13px;
+    margin-right: 13px;
+    background-color: #D6DCEA;
+}
+/* #new {
+    margin-left: 0px;
+} */

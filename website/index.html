@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- temp change -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="style.css" type="text/css">
+
+    <script>
+
+        // This function clears all the data fields when the user clicks the New button
+        clearInfo = () => {
+            $gel("customerNumber").value = '';
+            $gel("firstName").value = '';
+            $gel("lastName").value = '';
+            $gel("address").value = '';
+            $gel("city").value = '';
+            $gel("province").value = '';
+            $gel("postalCode").value = '';
+
+            resetFields();
+        }
+
+        resetFields = () => {
+            $gel("customerNumber").removeAttribute("style");
+            $gel("firstName").removeAttribute("style");
+            $gel("lastName").removeAttribute("style");
+            $gel("address").removeAttribute("style");
+            $gel("city").removeAttribute("style");
+            $gel("province").removeAttribute("style");
+            $gel("postalCode").removeAttribute("style");
+        }
+
+        // This function checks the text boxes to make sure all fields have data, and if so send the info to the server as a JSON object, with a callback to alert the user if the customer already exists or not
+        addInfo = () => {
+            if ($gel("customerNumber").value === '') {
+                $gel("customerNumber").style.border = '3px solid #D63230';
+            }
+            if ($gel("firstName").value === '') {
+                $gel("firstName").style.border = '3px solid #D63230';
+            }
+            if ($gel("lastName").value === '') {
+                $gel("lastName").style.border = '3px solid #D63230';
+            }
+            if ($gel("address").value === '') {
+                $gel("address").style.border = '3px solid #D63230';
+            }
+            if ($gel("city").value === '') {
+                $gel("city").style.border = '3px solid #D63230';
+            }
+            if ($gel("province").value === '') {
+                $gel("province").style.border = '3px solid #D63230';
+            }
+            if ($gel("postalCode").value === '') {
+                $gel("postalCode").style.border = '3px solid #D63230';
+            } else {
+                resetFields();
+
+                $.post('/customer/data/create', {
+                    customerID: $gel("customerNumber").value,
+                    firstName: $gel("firstName").value,
+                    lastName: $gel("lastName").value,
+                    address: $gel("address").value,
+                    city: $gel("city").value,
+                    province: $gel("province").value,
+                    postalCode: $gel("postalCode").value
+                },
+
+                    function (data, status) {
+                        cusID = data;
+                        if (cusID === false) {
+                            window.alert("A customer with that ID already exists");
+                        } else if (cusID !== false) {
+                            window.alert(`Customer was successfully added`);
+                        }
+                    })
+            }
+        }
+
+        // This function checks the text boxes to make sure all fields have data, and if so send the info to the server as a JSON object, with a callback to alert the user if the selected user can be updated or not
+        updateInfo = () => {
+            if ($gel("customerNumber").value === '') {
+                $gel("customerNumber").style.border = '3px solid #D63230';
+            }
+            if ($gel("firstName").value === '') {
+                $gel("firstName").style.border = '3px solid #D63230';
+            }
+            if ($gel("lastName").value === '') {
+                $gel("lastName").style.border = '3px solid #D63230';
+            }
+            if ($gel("address").value === '') {
+                $gel("address").style.border = '3px solid #D63230';
+            }
+            if ($gel("city").value === '') {
+                $gel("city").style.border = '3px solid #D63230';
+            }
+            if ($gel("province").value === '') {
+                $gel("province").style.border = '3px solid #D63230';
+            }
+            if ($gel("postalCode").value === '') {
+                $gel("postalCode").style.border = '3px solid #D63230';
+            } else {
+                resetFields();
+
+                $.post('/customer/data/update', {
+                    customerID: $gel("customerNumber").value,
+                    firstName: $gel("firstName").value,
+                    lastName: $gel("lastName").value,
+                    address: $gel("address").value,
+                    city: $gel("city").value,
+                    province: $gel("province").value,
+                    postalCode: $gel("postalCode").value
+                },
+
+                    function (data, status) {
+                        cusID = data;
+                        if (cusID === false) {
+                            window.alert("No customer with that ID exists");
+                        } else if (cusID !== false) {
+                            window.alert(`Customer information has been successfully updated`);
+                        }
+                    })
+            }
+        }
+
+        // This function allows the user to delete the selected customer ID after a confirmation, with a callback if the data was able to be deleted or not
+        deleteInfo = () => {
+            if ($gel("customerNumber").value === '') {
+                window.alert("Please enter in a customer ID");
+            } else {
+                result = window.confirm("Are you sure you want to delete this customer?");
+                if (result === true) {
+                    resetFields();
+
+                    $.post('/customer/data/delete', {
+                        customerID: $gel("customerNumber").value
+                    },
+
+                        function (data, status) {
+                            cusID = data;
+                            if (cusID === false) {
+                                window.alert("No customer with that ID was exists");
+                            } else if (cusID !== false) {
+                                window.alert(`Customer was successfully deleted`);
+                                clearInfo();
+                            }
+                        })
+                }
+            }
+        }
+
+        // This function allows the user to find the customer information with the customer ID they provide. If the customer exists the fields are populated with the returned data. 
+        findInfo = () => {
+            if ($gel("customerNumber").value === '') {
+                window.alert("Please enter in a Customer ID");
+            } else {
+                resetFields();
+
+                $.post('/customer/data/find', {
+                    customerID: $gel("customerNumber").value
+                },
+
+                    function (data, status) {
+                        if (data !== false) {
+                            window.alert(`Customer was successfully found`);
+                            JSONData = JSON.parse(data);
+
+                            $gel("firstName").value = JSONData.firstName;
+                            $gel("lastName").value = JSONData.lastName;
+                            $gel("address").value = JSONData.address;
+                            $gel("city").value = JSONData.city;
+                            $gel("province").value = JSONData.province;
+                            $gel("postalCode").value = JSONData.postalCode;
+                        } else if (data === false) {
+                            window.alert("No customer with that ID exists");
+                            clearInfo();
+                        }
+                    }
+                )
+            }
+        }
+
+        // This function is just a shorthand so I don't have to keep typing out document.getElementById
+        $gel = (id) => {
+            return document.getElementById(id)
+        }
+
+    </script>
+</head>
+
+<body>
+    <h1 id="h1">Customer Data Repository</h1>
+    <!-- The fields for the customer data to either be entered by the user, or populated from the server on the users request -->
+    <div id="text-fields">
+        <strong>Customer Number: </strong><input type="text" id="customerNumber" name="customerNumber"><br><br>
+        <strong>First Name: </strong><input type="text" id="firstName" name="firstName"><br><br>
+        <strong>Last Name: </strong><input type="text" id="lastName" name="lastName"><br><br>
+        <strong>Address: </strong><input type="text" id="address" name="address"><br><br>
+        <strong>City: </strong><input type="text" id="city" name="city"><br><br>
+        <strong>Province: </strong><input type="text" id="province" name="province"><br><br>
+        <strong>Postal Code: </strong><input type="text" id="postalCode" name="postalCode">
+    </div>
+
+    <!-- The buttons for the user to make their selections -->
+    <div id="user-buttons">
+        <input type="button" id="new" value="New" onclick="clearInfo();">
+        <input type="button" id="add" value="Add" onclick="addInfo();">
+        <input type="button" id="update" value="Update" onclick="updateInfo();">
+        <input type="button" id="delete" value="Delete" onclick="deleteInfo();">
+        <input type="button" id="find" value="Find" onclick="findInfo();">
+    </div>
+</body>
+
+</html>
